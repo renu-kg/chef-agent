@@ -50,6 +50,27 @@ graph TD
 
 ---
 
+## 📂 Project Structure
+
+```
+chef-agent/
+├── .agents/                    # Agent configurations & skill profiles
+│   └── skills/
+│       └── culinary_expert.md  # Tone & zero-waste instructions
+├── app/                        # Core application code
+│   ├── agent.py                # Main ADK 2.0 Graph Workflow
+│   ├── ui.py                   # Streamlit Frontend application
+│   ├── agent_runtime_app.py    # Runtime server configuration
+│   └── app_utils/              # Typing & telemetry utilities
+├── .env                        # Local secret configurations (ignored by git)
+├── pyproject.toml              # Dependencies & packages
+└── tests/                      # Unit & integration tests
+```
+
+> 💡 **Tip:** Use [Gemini CLI](https://github.com/google-gemini/gemini-cli) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
+
+---
+
 ## 🛠️ Course Concepts Covered
 
 This project demonstrates the practical application of three key AI Agent developer concepts:
@@ -71,15 +92,21 @@ To prevent dangerous food combinations or consumption of spoiled items, ChefAgen
 
 ## 💻 Setup & Installation Instructions
 
-### Prerequisites
-Ensure you have the following installed:
+### Requirements
+Before you begin, ensure you have:
 - **Python**: Version `3.11` to `3.14`
-- **uv**: Python package installer and manager.
+- **uv**: Python package manager (used for all dependency management) - [Install](https://docs.astral.sh/uv/getting-started/installation/)
+- **agents-cli**: Agents CLI - Install with `uv tool install google-agents-cli`
+- **Google Cloud SDK**: For optional GCP services - [Install](https://cloud.google.com/sdk/docs/install)
 
-### 1. Clone & Install Dependencies
-Navigate into the repository and synchronize dependencies:
+### 1. Installation
+Clone the repository and install dependencies using uv:
 ```bash
-uv sync
+# Setup CLI tools if not already installed
+uvx google-agents-cli setup
+
+# Synchronize virtual env and project dependencies
+agents-cli install
 ```
 
 ### 2. Configure Environment Credentials
@@ -95,3 +122,44 @@ Run the Streamlit application using your virtual environment:
 .\.venv\Scripts\streamlit run app/ui.py
 ```
 Open your browser and navigate to `http://localhost:8501`.
+
+---
+
+## ⚙️ CLI Commands Reference
+
+| Command | Description |
+| ------- | ----------- |
+| `agents-cli install` | Install dependencies using uv |
+| `agents-cli playground` | Launch local development environment (reloads auto on save) |
+| `agents-cli lint` | Run code quality checks |
+| `agents-cli eval` | Evaluate agent behavior (generate, grade, analyze, etc.) |
+| `uv run pytest` | Run unit and integration tests |
+| `agents-cli deploy` | Deploy agent to Agent Runtime |
+| `agents-cli publish gemini-enterprise` | Register deployed agent to Gemini Enterprise |
+
+### 🛠️ Project Management Commands
+
+| Command | Description |
+| ------- | ----------- |
+| `agents-cli scaffold enhance` | Add CI/CD pipelines and Terraform infrastructure |
+| `agents-cli infra cicd` | One-command setup of entire CI/CD pipeline + infrastructure |
+| `agents-cli scaffold upgrade` | Auto-upgrade to latest version while preserving customizations |
+
+---
+
+## 📈 Development, Deployment & Observability
+
+### Local Development
+Edit your agent logic in `app/agent.py` and run `agents-cli playground` to test using the local CLI UI, which auto-reloads on save.
+
+### Production Deployment
+```bash
+gcloud config set project <your-project-id>
+agents-cli deploy
+```
+To enhance your environment with CI/CD and infrastructure-as-code:
+1. Run `agents-cli scaffold enhance` to generate pipelines and Terraform configurations.
+2. Run `agents-cli infra cicd` to set up production infrastructure.
+
+### Observability
+Built-in telemetry automatically captures spans and exports metrics to **Cloud Trace**, **BigQuery**, and **Cloud Logging** when deployed.
